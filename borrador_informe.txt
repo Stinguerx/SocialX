@@ -1,0 +1,76 @@
+Análisis de Balance Estructural en la Red Social Slashdot
+
+1. Transformación del Grafo
+Propuesta de Algoritmo:
+Para transformar el grafo dirigido de Slashdot a uno no dirigido, implementamos la función transform_to_undirected(). Esta función suma los signos de las aristas entre cada par de nodos. Si la suma es positiva, asignamos un peso +1, y si es negativa o cero, asignamos -1.
+
+Justificación:
+Este enfoque preserva el sentimiento dominante entre los usuarios mientras resuelve conflictos de manera directa. Es similar al método utilizado en "Sign Prediction in Social Networks" de Leskovec et al. (2010).
+
+Análisis de Resultados:
+La red Slashdot exhibe una distribución de grados de ley de potencia, característica de muchas redes del mundo real. El gráfico de distribución de grados muestra una distribución de cola larga con algunos nodos que tienen grados muy altos y muchos nodos que tienen grados bajos. Esto indica la presencia de usuarios "centrales" que están altamente conectados en la red.
+a red Slashdot tiene una mayoría de relaciones positivas, pero también una cantidad significativa de relaciones negativas. El gráfico de barras muestra más bordes positivos que negativos, pero aún así una cantidad sustancial de bordes negativos. Esto refleja la naturaleza de las comunidades en línea donde las amistades son las mas comunes, pero los conflictos y los desacuerdos también ocurren con frecuencia. 
+
+2. Análisis de Tríadas
+Propuesta de Algoritmo:
+Implementamos las funciones enumerate_triads() y count_and_classify_triads() para contar y clasificar las tríadas en el grafo.
+
+Justificación:
+Este enfoque se basa en la teoría del balance estructural propuesta por Heider (1946). Una tríada es estable si tiene un número par de aristas negativas (0 o 2), e inestable si tiene un número impar (1 o 3).
+
+Análisis de Resultados:
+La red Slashdot contiene una mezcla de tríadas estables e inestables, y la mayoría son estables. El analisis demuestra que stable_triads es varias veces mayor que unstable_triads. Esto sugiere que la mayoría de las estructuras locales de la red están equilibradas, pero aún hay margen paar crear una red mas estable.
+
+3. Modificación de Tríadas Inestables
+Propuesta de Algoritmo:
+La función modify_unstable_triads() identifica tríadas inestables y cambia el signo de la arista con el menor peso absoluto.
+
+Justificación:
+Este método minimiza el cambio general en la red mientras logra el balance. Está inspirado en el enfoque de "edge-flipping" discutido en "Signed networks in social media" de Leskovec et al. (2010). La estrategia de modificación se basa en la teoría del equilibrio: invertir un borde negativo en una tríada inestable con una relación negativa la hará estable (porque cero o dos bordes negativos se consideran configuraciones estables).
+
+Análisis de Resultados:
+La modificación de tríadas inestables mejoró el balance global de la red, pero no garantiza un balance estructural completo.
+
+Discusión sobre Balance Global:
+Si bien la corrección de tríadas inestables aborda los desequilibrios locales, a menudo es insuficiente para equilibrar toda la red. La modificación de tríadas individuales puede crear nuevas inestabilidades en otras partes, en particular en redes grandes y complejas como Slashdot. El equilibrio estructural es una propiedad global y las correcciones locales por sí solas pueden no converger hacia un estado equilibrado.
+
+Lograr el equilibrio global requiere pasos adicionales. La partición espectral, por ejemplo, puede dividir la red en dos facciones, lo que ayuda a alinear la red con las condiciones de equilibrio a escala global. El refinamiento iterativo, que implica múltiples rondas de modificación de tríadas y ajustes tanto a los signos como a los pesos de los bordes, también son necesarios para abordar las inestabilidades en cascada y refinar la estructura de la red.
+
+Por lo tanto, se necesita un enfoque de varios pasos que combine la modificación de tríadas, la partición espectral y los ajustes iterativos para equilibrar por completo una red compleja.
+
+4. Balance Estructural
+Propuesta de Algoritmo:
+La partición espectral mediante el vector de Fiedler se basa en las propiedades de la matriz laplaciana, donde el segundo valor propio más pequeño proporciona información sobre la división natural del grafo. Este método está bien establecido en la teoría de grafos, en particular para cortes equilibrados, y a menudo se lo denomina "bisección espectral" en el análisis de redes.
+
+Justificación:
+Este enfoque se basa en los trabajos de Fiedler, M. (1973). Algebraic connectivity of graphs. Czechoslovak Mathematical Journal, 23(98), 298–305. Luxburg, U. (2007). A tutorial on spectral clustering. Statistics and Computing, 17(4), 395-416.
+
+Métrica de Distancia:
+Para cuantificar la distancia entre el gráfico original y el gráfico equilibrado (modificado), proponemos una métrica basada en TTS (Total Triad Shifts) y Balance Distance:
+Donde:
+TTS (desplazamientos totales de tríada): un TTS más alto indica más cambios de signo de arista y, por lo tanto, una transformación mayor con respecto al gráfico original.
+Balance distance: una distancia de equilibrio más alta significa que la partición del gráfico modificado difiere más del original, con diferencias en las densidades de grupo o en las densidades de aristas entre grupos.
+Ambas métricas juntas permiten medir cuánto ha cambiado la estructura y cómo ha mejorado (o empeorado) el equilibrio del gráfico a través de las modificaciones.
+
+Caracterización de Grupos
+La función characterize_groups() analiza los dos grupos encontrados, calculando el tamaño de cada grupo, la densidad de aristas dentro de los grupos y entre ellos.
+
+Análisis de Resultados
+La densidad inter-group es menor que las densidades de grupo individuales. Hay menos interacción entre los dos grupos que dentro de cada grupo. Los valores group_sizes y group_densities difieren significativamente entre los dos grupos, por lo que el algoritmo de equilibrio espectral ha separado efectivamente la red en dos comunidades distintas.
+
+Referencias
+
+Leskovec, J., Huttenlocher, D., & Kleinberg, J. (2010). Predicting positive and negative links in online social networks. Proceedings of the 19th International Conference on World Wide Web, 641-650.
+Heider, F. (1946). Attitudes and cognitive organization. The Journal of Psychology, 21(1), 107-112.
+Leskovec, J., Huttenlocher, D., & Kleinberg, J. (2010). Signed networks in social media. Proceedings of the SIGCHI Conference on Human Factors in Computing Systems, 1361-1370.
+Kunegis, J., Schmidt, S., Lommatzsch, A., Lerner, J., De Luca, E. W., & Albayrak, S. (2010). Spectral analysis of signed graphs for clustering, prediction and visualization. Proceedings of the 2010 SIAM International Conference on Data Mining, 559-570.
+Cartwright, D., & Harary, F. (1956). Structural balance: a generalization of Heider's theory. Psychological Review, 63(5), 277-293.
+Kepner, J., et al. (2015). Mathematical foundations of the GraphBLAS. 2016 IEEE High Performance Extreme Computing Conference (HPEC), 1-9.
+McGregor, A. (2014). Graph stream algorithms: a survey. ACM SIGMOD Record, 43(1), 9-20.
+Leskovec, J., & Faloutsos, C. (2006). Sampling from large graphs. Proceedings of the 12th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, 631-636.
+Becchetti, L., Boldi, P., Castillo, C., & Gionis, A. (2008). Efficient Semi-Streaming Algorithms for Local Triangle Counting in Massive Graphs. Proceedings of the 14th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, 16-24.
+Kermarrec, A. M., Maniu, S., & Oliveira, A. (2012). Signed Graph Drawing. In Graph Drawing (pp. 329-340). Springer.
+Battista, G. D., Eades, P., Tamassia, R., & Tollis, I. G. (1998). Graph Drawing: Algorithms for the Visualization of Graphs. Prentice Hall.
+Kolaczyk, E. D., & Csárdi, G. (2014). Statistical Analysis of Network Data with R. Springer.
+Fiedler, M. (1973). Algebraic connectivity of graphs. Czechoslovak Mathematical Journal, 23(98), 298–305.
+Luxburg, U. (2007). A tutorial on spectral clustering. Statistics and Computing, 17(4), 395-416.
