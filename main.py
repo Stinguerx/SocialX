@@ -3,6 +3,7 @@ from collections import Counter
 import random
 import math
 import os
+import copy
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -203,12 +204,12 @@ def visualize_partition_groups(G, partition, num_nodes=5000):
     nx.draw_networkx_nodes(subgraph, pos, 
                            nodelist=sample_nodes_0, 
                            node_color='skyblue', 
-                           node_size=10, 
+                           node_size=5, 
                            label='Group 0')
     nx.draw_networkx_nodes(subgraph, pos, 
                            nodelist=sample_nodes_1, 
                            node_color='lightgreen', 
-                           node_size=10, 
+                           node_size=5, 
                            label='Group 1')
     
     # Draw edges within groups
@@ -239,9 +240,9 @@ def visualize_partition_groups(G, partition, num_nodes=5000):
 if __name__ == "__main__":
     file_path = "soc-sign-Slashdot081106.txt"  # Update this with the actual file path
 
-    sample_size = None  # If None< consider entire dataset, otherwise take sample_size samples of it
+    sample_size = None  # If None consider entire dataset, otherwise take sample_size samples of it
 
-    os.makedirs("plots")
+    os.makedirs("plots", exist_ok=True)
     with open("results_output.txt", "w") as output_file:
 
         def log_and_print(message):
@@ -253,7 +254,7 @@ if __name__ == "__main__":
         G_undirected = transform_to_undirected(G_directed)
 
         # Make a copy of the original graph and original partition
-        original_G_undirected = G_undirected.copy()
+        original_G_undirected = copy.deepcopy(G_undirected)
 
         log_and_print("Analyzing triads before modification...")
         total_triads, stable_triads, unstable_triads = count_and_classify_triads(G_undirected)
