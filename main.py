@@ -1,12 +1,14 @@
-import networkx as nx
-from scipy import sparse
-from scipy.sparse.linalg import eigsh
 from itertools import combinations
 from collections import Counter
 import random
+import math
+import os
+
 import matplotlib.pyplot as plt
 import seaborn as sns
-import math
+import networkx as nx
+from scipy import sparse
+from scipy.sparse.linalg import eigsh
 
 
 def load_slashdot_graph(file_path, sample_size=None):
@@ -239,6 +241,7 @@ if __name__ == "__main__":
 
     sample_size = None  # If None< consider entire dataset, otherwise take sample_size samples of it
 
+    os.makedirs("plots")
     with open("results_output.txt", "w") as output_file:
 
         def log_and_print(message):
