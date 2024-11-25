@@ -1,0 +1,95 @@
+   LIMIT_BAL  GENDER  EDUCATION  MARRIAGE   PAY_AVG  BILL_RATIO  AGE_GROUP  PAY_AMT_AVG   PAY_AMT_STD  PAY_AMT_CV  PAY_AMT_TREND
+0      20000       2          2         1 -0.333333    0.195650          0   114.833333    281.283072    2.449490              0
+1     120000       2          2         2  0.500000    0.022350          0   833.333333    752.772653    0.903327          -2000
+2      90000       2          2         2  0.000000    0.324878          1  1836.333333   1569.815488    0.854864          -3482
+3      50000       2          2         1  0.000000    0.939800          1  1398.000000    478.058155    0.341959           1000
+4      50000       1          2         1 -0.333333    0.172340          3  9841.500000  13786.230736    1.400826           1321
+
+Mejores parámetros para Logistic Regression:
+{'model__C': 10, 'model__solver': 'lbfgs'}
+Results:
+              precision    recall  f1-score   support
+
+           0       0.83      0.74      0.78      4673
+           1       0.34      0.48      0.40      1327
+
+    accuracy                           0.68      6000
+   macro avg       0.59      0.61      0.59      6000
+weighted avg       0.73      0.68      0.70      6000
+
+
+
+Mejores parámetros para Logistic Regression:
+{'model__C': 10, 'model__solver': 'newton-cg'}
+Results:
+              precision    recall  f1-score   support
+
+           0       0.84      0.71      0.77      4673
+           1       0.34      0.52      0.41      1327
+
+    accuracy                           0.67      6000
+   macro avg       0.59      0.62      0.59      6000
+weighted avg       0.73      0.67      0.69      6000
+
+
+
+Mejores parámetros para Decision Tree:
+{'model__criterion': 'gini', 'model__max_depth': 10, 'model__min_samples_leaf': 1, 'model__min_samples_split': 2}
+Results:
+              precision    recall  f1-score   support
+
+           0       0.85      0.82      0.83      4673
+           1       0.44      0.49      0.46      1327
+
+    accuracy                           0.75      6000
+   macro avg       0.64      0.66      0.65      6000
+weighted avg       0.76      0.75      0.75      6000
+
+
+
+Resumen de resultados:
+               Accuracy  F1-Score   ROC-AUC
+Random Forest  0.768667  0.480539  0.733577
+
+Resumen de resultados:
+               Accuracy  F1-Score   ROC-AUC
+Random Forest    0.7685  0.470454  0.734102
+
+Mejores parámetros para Random Forest:
+{'model__criterion': 'gini', 'model__max_depth': None, 'model__min_samples_leaf': 1, 'model__min_samples_split': 2, 'model__n_estimators': 300}
+--------------------------------------------------
+
+Random Forest Results:
+              precision    recall  f1-score   support
+
+           0       0.85      0.89      0.87      4673
+           1       0.54      0.46      0.50      1327
+
+    accuracy                           0.80      6000
+   macro avg       0.70      0.68      0.69      6000
+weighted avg       0.79      0.80      0.79      6000
+
+
+Resumen de resultados:
+               Accuracy  F1-Score   ROC-AUC
+Random Forest  0.795167   0.50061  0.750811
+
+
+Mejores parámetros para Random Forest:
+{'model__criterion': 'gini', 'model__max_depth': None, 'model__min_samples_leaf': 1, 'model__min_samples_split': 2, 'model__n_estimators': 300}
+--------------------------------------------------
+
+Random Forest Results:
+              precision    recall  f1-score   support
+
+           0       0.85      0.89      0.87      4673
+           1       0.55      0.47      0.50      1327
+
+    accuracy                           0.80      6000
+   macro avg       0.70      0.68      0.69      6000
+weighted avg       0.79      0.80      0.79      6000
+
+
+Resumen de resultados:
+               Accuracy  F1-Score   ROC-AUC
+Random Forest    0.7965  0.503053  0.752266

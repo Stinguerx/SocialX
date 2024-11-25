@@ -1,0 +1,24 @@
+Results for Original:
+Accuracy: 0.7988
+F1: 0.4889
+ROC AUC: 0.7454
+Demographic Parity: 0.0277
+Equalized Odds: 0.0111
+Predictive Parity: 1.0341
+
+Results for Preprocessing (Reweighing):
+Accuracy: 0.7988
+F1: 0.4889
+ROC AUC: 0.7454
+Demographic Parity: 0.0277
+Equalized Odds: 0.0111
+Predictive Parity: 1.0341
+
+Results for Inprocessing (Adversarial Debiasing):
+Accuracy: 0.2212
+F1: 0.3623
+ROC AUC: 0.7454
+Demographic Parity: 0.0000
+Equalized Odds: 0.0000
+Predictive Parity: nan
+
