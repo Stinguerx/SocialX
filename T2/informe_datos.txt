@@ -47,6 +47,18 @@ Resultados de las métricas de equidad y análisis de los sesgos identificados:
 
     Sesgos en Income y Sexo, la columna Income se hizo binaria (0 para low Income, 1 para high income) pues originalmente habian 8 categorias.
 
+    El sesgo se puede apreciar al calcular las metricas de equidad considerando las categorias mencionadas:
+    {
+    "Fairness - Logistic Regression with no mitigation": {
+        "Accuracy": 0.7482553753300641,
+        "F1": 0.7539517950135951,
+        "Demographic Parity": 0.22638673882750238,
+        "Equalized Odds": 0.15921653116096968,
+        "Predictive Parity": 1.4557514508637424
+    }
+    }
+
+
 Discusión sobre los métodos de mitigación aplicados y sus efectos.
 
     Se aplico Reweighing como Pre-procesamiento , Adversarial Debiasing como In-procesamiento y Equalized Odds Post-Processing como Post-procesamiento.

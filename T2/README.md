@@ -1,4 +1,4 @@
-# Slashdot Graph Analysis
+# Bias Mitigation Analysis
 These scripts analyzes the bias and mitigation techniques that can be applied to clasification models.
 
 ## Requirements
