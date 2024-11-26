@@ -1,0 +1,128 @@
+Introducción al problema y dataset seleccionado: Predecir diabetes, dataset https://www.kaggle.com/datasets/alexteboul/diabetes-health-indicators-dataset?resource=download
+Se uso la version 50/50 split con ~70k filas (35k con/sin diabates) para no tener que balancear el dataset
+
+Justificación del modelo de clasificación elegido:
+Basado en GridSearchCV con los siguientes parametros:
+models = { 
+    'Logistic Regression': {
+        'model': LogisticRegression(random_state=42, max_iter=1000),
+        'params': {
+            'model__C': [0.01, 0.1, 1, 10, 100],
+            'model__solver': ['liblinear', 'lbfgs', 'newton-cg', 'newton-cholesky', 'sag', 'saga']
+        }
+    },
+    'Decision Tree': {
+        'model': DecisionTreeClassifier(random_state=42),
+        'params': {
+            'model__criterion': ['gini', 'entropy', 'log_loss'],
+            'model__max_depth': [None, 10, 20, 30, 40],
+            'model__min_samples_split': [2, 5, 10],
+            'model__min_samples_leaf': [1, 2, 4]
+        }
+    },
+    'SVM': {
+        'model': SVC(random_state=42, probability=True),
+        'params': {
+            'model__C': [0.1, 1, 10, 100],
+            'model__kernel': ['linear', 'rbf', 'poly', 'sigmoid'],
+            'model__gamma': ['scale', 'auto']
+        }
+    },
+    'Random Forest': {
+        'model': RandomForestClassifier(random_state=42),
+        'params': {
+            'model__criterion': ['gini', 'entropy', 'log_loss'],
+            'model__n_estimators': [100, 200, 300, 400, 500],
+            'model__max_depth': [None, 10, 20, 30],
+            'model__min_samples_split': [2, 5, 10],
+            'model__min_samples_leaf': [1, 2, 4]
+        }
+    },
+}
+
+Se vio que el modelo mas adecuado era LogisticRegression con parametos: C=1, solver='newton-cg', pues rinde bien (en tiempo y precision), y se pueden apreciar
+las diferencias al aplicar mitigacion de sesgos.
+
+Resultados de las métricas de equidad y análisis de los sesgos identificados:
+
+    Sesgos en Income y Sexo, la columna Income se hizo binaria (0 para low Income, 1 para high income) pues originalmente habian 8 categorias.
+
+Discusión sobre los métodos de mitigación aplicados y sus efectos.
+
+    Se aplico Reweighing como Pre-procesamiento , Adversarial Debiasing como In-procesamiento y Equalized Odds Post-Processing como Post-procesamiento.
+    Se probaron distintas combinaciones de estos metodos:
+    "each_method_processing.py": Se aplica cada metodo de manera independiente y se compara con el modelo sin procesamiento
+    {
+    "Fairness - Logistic Regression with no mitigation": {
+        "Accuracy": 0.7482553753300641,
+        "F1": 0.7539517950135951,
+        "Demographic Parity": 0.22638673882750238,
+        "Equalized Odds": 0.15921653116096968,
+        "Predictive Parity": 1.4557514508637424
+    },
+    "Fairness - Logistic Regression after only Reweighing": {
+        "Accuracy": 0.7442474537910223,
+        "F1": 0.7447769621682665,
+        "Demographic Parity": 0.10172434904495764,
+        "Equalized Odds": 0.03128545680048786,
+        "Predictive Parity": 1.1947984916976857
+    },
+    "Fairness - After only Adversarial Debiasing": {
+        "Accuracy": 0.7460392304790645,
+        "F1": 0.7528223955943093,
+        "Demographic Parity": 0.11752941785473803,
+        "Equalized Odds": 0.04899112530699232,
+        "Predictive Parity": 1.22033827612317
+    },
+    "Fairness - Logistic Regression after only Equalized Odds Post-Processing": {
+        "Accuracy": 0.7430686533383629,
+        "F1": 0.6858460651484578,
+        "Demographic Parity": 0.0010323099448763529,
+        "Equalized Odds": -0.1457083270880576,
+        "Predictive Parity": 1.0017561915328104
+    }
+    }
+
+    "reweigh_and_eq_processing.py": Se aplica Reweighing y Equalized Odds Post Processing secuencialmente (uno tras del otro) y se compara con el modelo sin procesamiento
+    {
+    "Fairness - Logistic Regression with no mitigation": {
+        "Accuracy": 0.7482553753300641,
+        "F1": 0.7539517950135951,
+        "Demographic Parity": 0.22638673882750238,
+        "Equalized Odds": 0.15921653116096968,
+        "Predictive Parity": 1.4557514508637424
+    },
+    "Fairness - Logistic Regression after Reweighing and Equalized Odds Post-Processing": {
+        "Accuracy": 0.7734345529988683,
+        "F1": 0.7180991493106483,
+        "Demographic Parity": 0.12705964699045524,
+        "Equalized Odds": -0.03426943605215142,
+        "Predictive Parity": 1.245256188618127
+    }
+    }
+
+    "all_methods_processing.py": Se aplica Reweighing, se entrena un Adversarial Debiasing model y se aplica Equalized Odds Post Processing secuencialmente (uno tras del otro) 
+    y se compara con el modelo logistico sin procesamiento
+    {
+    "Fairness - Logistic Regression with no mitigation": {
+        "Accuracy": 0.7482553753300641,
+        "F1": 0.7539517950135951,
+        "Demographic Parity": 0.22638673882750238,
+        "Equalized Odds": 0.15921653116096968,
+        "Predictive Parity": 1.4557514508637424
+    },
+    "Fairness - Adversarial Debiasing with Reweighing": {
+        "Accuracy": 0.7354771784232366,
+        "F1": 0.7403258655804481,
+        "Demographic Parity": -0.03146837212486486,
+        "Equalized Odds": -0.09949810465565379,
+        "Predictive Parity": 0.9443571510105254
+    },
+    "Fairness - Adversarial Debiasing with Reweighing and Equalized Odds": {
+        "Accuracy": 0.7624009807619766,
+        "F1": 0.6888930048774464,
+        "Demographic Parity": 0.24554187571635838,
+        "Equalized Odds": 0.08685971404905668,
+        "Predictive Parity": 1.609103051934162
+    }
+    }

@@ -1,24 +1,14 @@
-Results for Original:
-Accuracy: 0.7988
-F1: 0.4889
-ROC AUC: 0.7454
-Demographic Parity: 0.0277
-Equalized Odds: 0.0111
-Predictive Parity: 1.0341
+Mejores parámetros para Random Forest:
+{'model__criterion': 'gini', 'model__max_depth': None, 'model__min_samples_leaf': 1, 'model__min_samples_split': 2, 'model__n_estimators': 300}
+Results:
+              precision    recall  f1-score   support
 
-Results for Preprocessing (Reweighing):
-Accuracy: 0.7988
-F1: 0.4889
-ROC AUC: 0.7454
-Demographic Parity: 0.0277
-Equalized Odds: 0.0111
-Predictive Parity: 1.0341
+         0.0       0.76      0.70      0.73      7070
+         1.0       0.72      0.78      0.75      7069
 
-Results for Inprocessing (Adversarial Debiasing):
-Accuracy: 0.2212
-F1: 0.3623
-ROC AUC: 0.7454
-Demographic Parity: 0.0000
-Equalized Odds: 0.0000
-Predictive Parity: nan
+    accuracy                           0.74     14139
+   macro avg       0.74      0.74      0.74     14139
+weighted avg       0.74      0.74      0.74     14139
+
+
 
