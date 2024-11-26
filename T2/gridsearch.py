@@ -24,7 +24,10 @@ data['Income_binary'] = data['Income'].apply(lambda x: 1 if x >= 5 else 0)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
 # Modelos y parámetros para GridSearchCV
+print("ADVERTENCIA - GridSearchCV ocupa toda la CPU y se demora mucho en probar todos los parametros")
 print("ADVERTENCIA - SI SVM se deja activo puede demorarse DIAS en terminar el gridsearch")
+input("Desea continuar? ")
+
 models = { 
     'Logistic Regression': {
         'model': LogisticRegression(random_state=42, max_iter=1000),
